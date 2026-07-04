@@ -52,4 +52,37 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data["password"]
         )
         
+
+class LoginSerializer(serializers.Serializer):
+    
+    email = serializers.EmailField()   
+    password = serializers.CharField(write_only=True)
+
+    
+    def validate(self, attrs):
         
+        
+        user = UserService.authenticate_user(
+            email=attrs["email"],
+            password=attrs["password"],
+        )
+        
+        attrs["user"] = user
+        
+        return attrs
+    
+
+class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer responsible for returning the authenticated user's data.
+    """
+    
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "email",
+        )
+        
+    

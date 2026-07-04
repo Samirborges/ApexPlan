@@ -1,7 +1,10 @@
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
+from django.contrib.auth import authenticate
+from typing import cast
 
 from .models import User
+
 
 
 class UserService:
@@ -40,3 +43,32 @@ class UserService:
         )
 
         return user
+    
+
+    @staticmethod
+    def authenticate_user(email: str, password: str) -> User:
+        """
+        Authenticate a user using Django's authentication backend
+        """
+        
+        user = User.objects.filter(
+            email=email.lower()
+        ).first()
+        
+        if user is None:
+            raise ValidationError(
+                {
+                    "detail": "Invalid username or password."
+                }
+            )
+            
+        if not user.check_password(password):
+            raise ValidationError(
+                {
+                    "detail": "Invalid password."
+                }
+            )
+            
+        return cast(User, user)
+    
+    
