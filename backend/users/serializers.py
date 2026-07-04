@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from .models import User
+from .services import UserService
 
 class RegisterSerializer(serializers.ModelSerializer):
     
@@ -44,10 +46,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         
         validated_data.pop("confirm_password")
         
-        user = User.objects.create_user(
+        return UserService.register(
             username=validated_data["username"],
             email=validated_data["email"],
             password=validated_data["password"]
         )
         
-        return user
+        
