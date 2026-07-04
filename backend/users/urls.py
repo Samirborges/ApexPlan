@@ -4,7 +4,7 @@ from .views import RegisterView
 
 urlpatterns = [
     path(
-        "/register/",
+        "register/",
         RegisterView.as_view(),
         name="register",
     )
