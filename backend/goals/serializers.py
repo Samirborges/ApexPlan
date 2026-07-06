@@ -19,7 +19,13 @@ class GoalSerializer(serializers.ModelSerializer):
             "objective",
             "title",
             "description",
+            "status",
+            "order_index",
             "estimated_days",
+            "extra_days",
+            "start_date",
+            "end_date",
+            "is_completed"
         )
 
         read_only_fields = (
