@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ObjectiveListCreateView
+from .views import ObjectiveListCreateView, ObjectiveDetailView
 
 urlpatterns = [
     path(
@@ -10,7 +10,7 @@ urlpatterns = [
     
     path(
         "<int:pk>/",
-        ObjectiveListCreateView.as_view(),
+        ObjectiveDetailView.as_view(),
         name="objective-detail",
     )
 ]
