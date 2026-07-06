@@ -12,8 +12,18 @@ class GoalListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Goal.objects.filter(
-            objective_user=self.request.user
+            objective__user=self.request.user
         ).order_by(
             "objective",
             "order_index",
+        )
+        
+        
+class GoalDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = GoalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Goal.objects.filter(
+            objective__user=self.request.user
         )

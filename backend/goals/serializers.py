@@ -25,11 +25,23 @@ class GoalSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "id",
         )
+        
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        request = self.context.get("request")
+
+        if request:
+            self.fields["objective"].queryset = Objective.objects.filter(
+                user=request.user
+            )
 
     
     def create(self, validated_data):
         
         return GoalService.create(
+            user=self.context["request"].user,
             objective=validated_data["objective"],
             title=validated_data["title"],
             description=validated_data.get("description", ""),

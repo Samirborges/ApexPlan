@@ -1,7 +1,9 @@
 from django.db import transaction
-from datetime import datetime, timedelta
+from datetime import date, timedelta
+from rest_framework.exceptions import PermissionDenied
 
-from objectives.models import Objective
+from objectives.models import Objective 
+from users.models import User 
 from .models import Goal
 
 class GoalService:
@@ -24,29 +26,29 @@ class GoalService:
         return last_goal.order_index + 1
 
     
+    @staticmethod
     def _calculate_dates(
         objective: Objective,
-    ) -> tuple:
+        estimated_days: int,
+    ) -> tuple[date | None, date | None ]:
         """
         Returns the start_date for the next goal.
         """
 
-        last_goal = (
-            Goal.objects.filter(objective=objective)
-            .order_by("-order_index")
-            .first()
-        )
+        if objective.start_date is None:
+            return None, None
+        
+        start_date = objective.start_date
+        end_date = start_date + timedelta(days=estimated_days)
 
-        if last_goal is None:
-            return objective.start_date
-
-        return last_goal.end_date
+        return start_date, end_date
 
 
     @staticmethod
     @transaction.atomic
     def create(
         *,
+        user: User,
         objective: Objective,
         title: str,
         description: str,
@@ -56,13 +58,18 @@ class GoalService:
         Creates a new goal for the authenticated user.
         """
 
+        if objective.user != user:
+            raise PermissionDenied(
+                "You cannot create goals for another user's objective."
+            )
+        
         order_index = GoalService._get_next_order(objective)
 
-        start_date = GoalService._calculate_dates(objective)
-        
-        end_date = start_date + timedelta(days=estimated_days)
+        start_date, end_date = GoalService._calculate_dates(
+            objective,
+            estimated_days
+        )
 
-        
         goal = Goal.objects.create(
             objective=objective,
             title=title,
