@@ -16,7 +16,9 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     
 
-class LoginView(APIView):
+class LoginView(generics.GenericAPIView):
+
+    serializer_class = LoginSerializer
     
     permission_classes = []
 

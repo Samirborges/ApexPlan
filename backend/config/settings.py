@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    "drf_spectacular",
     'users',
     'objectives',
     'goals',
@@ -133,6 +134,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
@@ -149,3 +151,8 @@ SIMPLE_JWT = {
 
 }
 
+SPECTACULAR_SETTINGS = {
+    "TITLE": "ApexPlan API",
+    "DESCRIPTION": "Backend API for ApexPlan",
+    "VERSION": "1.0.0",
+}
