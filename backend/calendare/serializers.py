@@ -25,6 +25,18 @@ class CalendarEventSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+        
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        request = self.context.get("request")
+
+        if request:
+            self.fields["goal"].queryset = Goal.objects.filter(
+                objective__user=request.user
+            )
+    
 
     def create(self, validated_data):
         request = self.context["request"]

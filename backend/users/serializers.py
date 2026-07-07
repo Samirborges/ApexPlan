@@ -5,6 +5,8 @@ from .services import UserService
 
 class RegisterSerializer(serializers.ModelSerializer):
     
+    email = serializers.EmailField(required=True)
+    
     confirm_password = serializers.CharField(
         write_only=True
     )

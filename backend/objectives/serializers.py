@@ -20,14 +20,14 @@ class ObjectiveSerializer(serializers.ModelSerializer):
             "user"
         )
         
-        read_only_field = (
+        read_only_fields = (
             "id",
         )
         
     
     def create(self, validated_data):
         
-        return Objective.objects.create(
+        return ObjectiveService.create(
             user=validated_data["user"],
             title=validated_data["title"],
             start_date=validated_data["start_date"],

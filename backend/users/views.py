@@ -11,6 +11,10 @@ from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
 class RegisterView(generics.CreateAPIView):
     
+    permission_classes = []
+
+    authentication_classes = []
+    
     queryset = User.objects.all()
     
     serializer_class = RegisterSerializer
