@@ -30,6 +30,10 @@ class GoalSerializer(serializers.ModelSerializer):
 
         read_only_fields = (
             "id",
+            "status",
+            "order_index",
+            "start_date",
+            "end_date",
         )
         
         
@@ -39,9 +43,12 @@ class GoalSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
 
         if request:
-            self.fields["objective"].queryset = Objective.objects.filter(
-                user=request.user
+            self.fields["objective"].queryset = (
+                Objective.objects.filter(
+                    user=request.user
+                )
             )
+            
 
     
     def create(self, validated_data):
@@ -54,3 +61,13 @@ class GoalSerializer(serializers.ModelSerializer):
             estimated_days=validated_data["estimated_days"],
         )
     
+    
+    def update(self, instance, validated_data):
+        return GoalService.update(
+            goal=instance,
+            title=validated_data.get("title", instance.title),
+            description=validated_data.get("description", instance.description,),
+            estimated_days=validated_data.get("estimated_days", instance.estimated_days,),
+            extra_days=validated_data.get("extra_days", instance.extra_days,),
+            is_completed=validated_data.get("is_completed", instance.is_completed),
+        )
