@@ -172,6 +172,7 @@ def test_read_only_fields():
     serializer = CalendarEventSerializer()
 
     assert serializer.fields["id"].read_only
-    assert serializer.fields["user"].read_only
     assert serializer.fields["created_at"].read_only
     assert serializer.fields["updated_at"].read_only
+    
+    assert "user" not in serializer.fields
