@@ -138,6 +138,10 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+STATICFILES_STORAGE = (
+    "django.contrib.staticfiles.storage.StaticFilesStorage"
+)
+
 AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
