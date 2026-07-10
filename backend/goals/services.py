@@ -95,6 +95,8 @@ class GoalService:
         )
 
         GoalService._recalculate_schedule(objective)
+        
+        goal.refresh_from_db()
 
         return goal
      

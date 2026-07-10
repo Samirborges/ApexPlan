@@ -48,6 +48,10 @@ class GoalSerializer(serializers.ModelSerializer):
                     user=request.user
                 )
             )
+
+        # Durante a criação (POST), is_completed é somente leitura
+        if self.instance is None:
+            self.fields["is_completed"].read_only = True
             
 
     
