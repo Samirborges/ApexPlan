@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -9,6 +10,7 @@ import { registerUser } from "@/app/services/auth.service";
 import { Input } from "@/app/components/ui/Input";
 
 export function RegisterForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -26,6 +28,9 @@ export function RegisterForm() {
       await  registerUser(data);
       toast.success("Account created successfully!");
       reset();
+      setTimeout(() => {
+        router.push("/login");
+      }, 1200);
     } catch (error) {
       toast.error("Could not create account. Please check your details and try again.");
     } finally {

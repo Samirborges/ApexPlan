@@ -27,6 +27,11 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
+      const hasRefreshToken = Boolean(tokenStorage.getRefreshToken());
+      if (!hasRefreshToken) {
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) {
         return Promise.reject(error);
       }
@@ -38,9 +43,6 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         tokenStorage.clear();
-        if (typeof window !== "undefined") {
-          window.location.href = "/login";
-        }
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
