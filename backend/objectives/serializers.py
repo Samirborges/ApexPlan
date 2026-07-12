@@ -50,6 +50,10 @@ class ObjectiveSerializer(serializers.ModelSerializer):
             start_date=validated_data.get(
                 "start_date",
                 instance.start_date,
+            ),
+            status=validated_data.get(
+                "status",
+                instance.status,
             )
         )
         

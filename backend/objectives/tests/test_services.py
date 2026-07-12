@@ -36,10 +36,27 @@ def test_update_objective():
         title="Novo título",
         description="Nova descrição",
         start_date=date.today(),
+        status=Objective.Status.ACTIVE,
     )
 
     assert updated.title == "Novo título"
     assert updated.description == "Nova descrição"
+
+
+@pytest.mark.django_db
+def test_update_objective_status():
+
+    objective = ObjectiveFactory()
+
+    updated = ObjectiveService.update(
+        objective=objective,
+        title=objective.title,
+        description=objective.description,
+        start_date=objective.start_date,
+        status=Objective.Status.COMPLETED,
+    )
+
+    assert updated.status == Objective.Status.COMPLETED
 
 
 @pytest.mark.django_db

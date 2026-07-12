@@ -37,6 +37,7 @@ class ObjectiveService:
         title: str,
         description: str,
         start_date,
+        status: str,
     ) -> Objective:
         """
         Updates an existing objective.
@@ -45,8 +46,16 @@ class ObjectiveService:
         objective.title = title
         objective.description = description
         objective.start_date = start_date
+        objective.status = status
         
-        objective.save()
+        objective.save(
+            update_fields=[
+                "title",
+                "description",
+                "start_date",
+                "status",
+            ]
+        )
         
         return objective
     
