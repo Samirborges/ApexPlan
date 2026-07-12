@@ -63,7 +63,7 @@ export default function HomePage() {
           active={activeStatus}
           onChange={(value) => setActiveStatus(value as ObjectiveStatus)}
         />
-        <button className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700">
+        <button className="rounded-lg cursor-pointer bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700">
           Create new objective
         </button>
       </div>
