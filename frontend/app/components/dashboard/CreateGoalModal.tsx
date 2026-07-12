@@ -22,7 +22,10 @@ export function CreateGoalModal({ isOpen, objectiveId, objectiveTitle, onClose, 
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<GoalFormValues>({ resolver: zodResolver(goalSchema) });
+  } = useForm<GoalFormValues>({
+    resolver: zodResolver(goalSchema),
+    defaultValues: { title: "", description: "", estimated_days: 1, extra_days: 0 },
+  });
 
   const onSubmit = async (data: GoalFormValues) => {
     try {
@@ -71,10 +74,8 @@ export function CreateGoalModal({ isOpen, objectiveId, objectiveTitle, onClose, 
           <Input type="number" min={1} placeholder="Type here" {...register("estimated_days", { valueAsNumber: true })} error={errors.estimated_days?.message} />
         </div>
 
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Extra Days</label>
-          <Input type="number" min={0} placeholder="Type here" {...register("extra_days", { valueAsNumber: true })} error={errors.extra_days?.message} />
-        </div>
+        {/* extra_days não aparece na criação — só existe sentido após a meta já estar em andamento */}
+        <input type="hidden" {...register("extra_days", { valueAsNumber: true })} />
 
         <button
           type="submit"
