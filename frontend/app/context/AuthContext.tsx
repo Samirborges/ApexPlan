@@ -2,12 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import type { User } from "@/app/types/auth";
-import { fetchCurrentUser, logoutUser } from "@/app/services/auth.service";
+import { fetchCurrentUser, loginUser, logoutUser } from "@/app/services/auth.service";
 
 interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
-  setUser: (user: User | null) => void;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
 }
 
@@ -28,13 +28,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const login = async (credentials: { email: string; password: string }) => {
+    await loginUser(credentials); 
+    const currentUser = await fetchCurrentUser(); 
+    setUser(currentUser); 
+  };
+
   const logout = () => {
     logoutUser();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, setUser, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

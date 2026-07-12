@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/app/lib/validations/auth";
-import { loginUser } from "@/app/services/auth.service";
+import { useAuth } from "@/app/context/AuthContext";
 import { Input } from "@/app/components/ui/Input";
 
 export function LoginForm() {
   const router = useRouter();
+  const { login } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -26,13 +27,13 @@ export function LoginForm() {
     setIsSubmitting(true);
     setFormError(null);
     try {
-      await loginUser(data);
-      router.push("/dashboard");
+      await login(data);
+      router.push("/home");
     } catch (error) {
       // Mensagem genérica: não revele se foi "email não existe" vs "senha errada",
       // isso evita enumeration attack.
       setFormError("Invalid email or password.");
-      resetField("password"); // por segurança, não deixa a senha errada no campo
+      resetField("password");
     } finally {
       setIsSubmitting(false);
     }
