@@ -25,7 +25,6 @@ class ObjectiveSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "id",
             "end_date",
-            "status",
         )
         
     
