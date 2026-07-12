@@ -16,4 +16,6 @@ export interface CreateObjectivePayload {
   start_date: string;
 }
 
-export type UpdateObjectivePayload = Partial<CreateObjectivePayload>;
+export type UpdateObjectivePayload = Partial<CreateObjectivePayload> & {
+  status?: ObjectiveStatus;
+};

@@ -13,12 +13,15 @@ import { fetchGoals, updateGoal, deleteGoal } from "@/app/services/goals.service
 import { formatDate } from "@/app/lib/utils/date";
 import type { Objective } from "@/app/types/objective";
 import type { Goal, GoalStatus } from "@/app/types/goal";
+import { ObjectiveStatusBadge } from "@/app/components/dashboard/ObjectiveStatusBadge";
 
 const columns: { status: GoalStatus; label: string }[] = [
   { status: "IN_PROGRESS", label: "In Progress" },
   { status: "PENDING", label: "Pending" },
   { status: "COMPLETED", label: "Completed" },
 ];
+
+
 
 export default function ObjectiveDetailPage() {
   const params = useParams();
@@ -74,6 +77,20 @@ export default function ObjectiveDetailPage() {
       toast.success("Saved.");
     } catch {
       toast.error("Could not save changes.");
+    }
+  };
+
+  const handleChangeObjectiveStatus  = async (status: Objective["status"]) => {
+    console.log("handleChangeObjectiveStatus chamado com:", status); 
+    if (!objective) return;
+    try {
+      const updated = await updateObjective(objective.id, { status });
+      console.log("resposta da API:", updated);
+      setObjective(updated);
+      toast.success("Status updated.");
+    } catch (error){
+      console.error("erro ao atualizar status:", error); 
+      toast.error("Could not update status.");
     }
   };
 
@@ -148,6 +165,10 @@ export default function ObjectiveDetailPage() {
           onSave={(value) => handleSaveField("title", value)}
           className="text-2xl font-bold text-gray-900"
         />
+      </div>
+
+      <div className="mt-3">
+        <ObjectiveStatusBadge status={objective.status} onChange={handleChangeObjectiveStatus} />
       </div>
 
       <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
