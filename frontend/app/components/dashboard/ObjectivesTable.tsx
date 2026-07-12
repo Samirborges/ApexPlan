@@ -4,14 +4,14 @@ import { Pencil, Trash2 } from "lucide-react";
 import { ImagePlaceholder } from "@/app/components/ui/ImagePlaceholder";
 import { formatDate } from "@/app/lib/utils/date";
 import type { Objective } from "@/app/types/objective";
+import Link from "next/link";
 
 interface ObjectivesTableProps {
   objectives: Objective[];
-  onEdit: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
-export function ObjectivesTable({ objectives, onEdit, onDelete }: ObjectivesTableProps) {
+export function ObjectivesTable({ objectives, onDelete }: ObjectivesTableProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white cursor-pointer">
       <table className="w-full text-left text-sm">
@@ -43,13 +43,13 @@ export function ObjectivesTable({ objectives, onEdit, onDelete }: ObjectivesTabl
               </td>
               <td className="px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => onEdit(objective.id)}
-                    aria-label="Edit objective"
-                    className="text-gray-400 transition-colors cursor-pointer hover:text-yellow-500 group-hover:text-white"
+                  <Link
+                    href={`/objectives/${objective.id}`}
+                    aria-label="View objective"
+                    className="text-gray-400 transition-colors hover:text-yellow-500 group-hover:text-white"
                   >
                     <Pencil className="h-4 w-4" />
-                  </button>
+                  </Link>
                   <button
                     onClick={() => onDelete(objective.id)}
                     aria-label="Delete objective"

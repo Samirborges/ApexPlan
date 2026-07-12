@@ -6,6 +6,7 @@ import { Tabs } from "@/app/components/ui/Tabs";
 import { ObjectivesTable } from "@/app/components/dashboard/ObjectivesTable";
 import { fetchObjectives, deleteObjective } from "@/app/services/objectives.service";
 import type { Objective, ObjectiveStatus } from "@/app/types/objective";
+import { CreateObjectiveModal } from "@/app/components/dashboard/CreateObjectiveModal";
 
 const statusTabs = [
   { label: "A fazer", value: "ACTIVE" },
@@ -17,6 +18,7 @@ export default function HomePage() {
   const [activeStatus, setActiveStatus] = useState<ObjectiveStatus>("ACTIVE");
   const [allObjectives, setAllObjectives] = useState<Objective[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -39,10 +41,6 @@ export default function HomePage() {
 
   const visibleObjectives = allObjectives.filter((o) => o.status === activeStatus);
 
-  const handleEdit = (id: number) => {
-    console.log("edit", id);
-  };
-
   const handleDelete = async (id: number) => {
     try {
       await deleteObjective(id);
@@ -63,7 +61,9 @@ export default function HomePage() {
           active={activeStatus}
           onChange={(value) => setActiveStatus(value as ObjectiveStatus)}
         />
-        <button className="rounded-lg cursor-pointer bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700">
+        <button 
+        onClick={() => setIsModalOpen(true)}
+        className="rounded-lg cursor-pointer bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700">
           Create new objective
         </button>
       </div>
@@ -76,7 +76,6 @@ export default function HomePage() {
         ) : visibleObjectives.length > 0 ? (
           <ObjectivesTable
             objectives={visibleObjectives}
-            onEdit={handleEdit}
             onDelete={handleDelete}
           />
         ) : (
@@ -85,6 +84,12 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      <CreateObjectiveModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreated={(objective) => setAllObjectives((prev) => [...prev, objective])}
+        />
     </div>
   );
 }
