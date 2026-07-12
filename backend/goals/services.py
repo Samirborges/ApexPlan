@@ -110,6 +110,7 @@ class GoalService:
         description: str,
         estimated_days: int,
         extra_days: int,
+        status: str,
         is_completed: bool
     ) -> Goal:
         """
@@ -122,11 +123,19 @@ class GoalService:
         goal.extra_days = extra_days
         goal.is_completed = is_completed
         
-        goal.status = (
-            Goal.Status.COMPLETED
-            if is_completed
-            else Goal.Status.IN_PROGRESS
-        )
+        if status != goal.status:
+            goal.status = status
+            goal.is_completed = (
+                status == Goal.Status.COMPLETED
+            )
+
+        elif is_completed != goal.is_completed:
+            goal.is_completed = is_completed
+            goal.status = (
+                Goal.Status.COMPLETED
+                if is_completed
+                else Goal.Status.PENDING
+            )
         
         goal.save(
             update_fields=[

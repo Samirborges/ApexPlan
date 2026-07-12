@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from django.contrib.auth.models import AnonymousUser
 
 from .models import Goal
 from .serializers import GoalSerializer
@@ -50,7 +51,14 @@ class GoalDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        
+        if not self.request.user.is_authenticated:
+            return Goal.objects.none()
+        
         return Goal.objects.filter(
             objective__user=self.request.user
+        ).order_by(
+            "objective",
+            "order_index",
         )
         
