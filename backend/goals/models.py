@@ -5,7 +5,7 @@ from common.models import BaseModel
 class Goal(BaseModel):
 
     class Status(models.TextChoices):
-        PENDING = "PEDING", "Peding"
+        PENDING = "PENDING", "Pending"
         IN_PROGRESS = "IN_PROGRESS", "In Progress"
         COMPLETED = "COMPLETED", "Completed"
 
