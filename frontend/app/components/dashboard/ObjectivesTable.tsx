@@ -1,15 +1,21 @@
 "use client";
 
 import { Pencil, Trash2 } from "lucide-react";
-import { ImagePlaceholder } from "@/app/components/ui/ImagePlaceholder";
 import { formatDate } from "@/app/lib/utils/date";
-import type { Objective } from "@/app/types/objective";
+import { clsx } from "clsx";
+import type { Objective, ObjectiveStatus } from "@/app/types/objective";
 import Link from "next/link";
 
 interface ObjectivesTableProps {
   objectives: Objective[];
   onDelete: (id: number) => void;
 }
+
+const statusColor: Record<ObjectiveStatus, string> = {
+  ACTIVE: "bg-blue-200",
+  CANCELED: "bg-red-200",
+  COMPLETED: "bg-emerald-200",
+};
 
 export function ObjectivesTable({ objectives, onDelete }: ObjectivesTableProps) {
   return (
@@ -30,7 +36,10 @@ export function ObjectivesTable({ objectives, onDelete }: ObjectivesTableProps) 
               className="group border-b border-gray-100 text-gray-900 transition-colors last:border-0 hover:bg-indigo-600 hover:text-white"
             >
               <td className="flex items-center gap-3 px-6 py-4 font-medium">
-                <ImagePlaceholder label="Status" className="h-6 w-6 shrink-0 rounded-full" />
+                <span
+                  aria-label={`Status: ${objective.status}`}
+                  className={clsx("h-6 w-6 shrink-0 rounded-full", statusColor[objective.status])}
+                />
                 {objective.title}
               </td>
               <td className="max-w-xs truncate px-6 py-4 text-gray-500 group-hover:text-white/90">

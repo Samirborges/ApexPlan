@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { RegisterForm } from "@/app/components/auth/RegisterForm";
-import { ImagePlaceholder } from "@/app/components/ui/ImagePlaceholder";
+import Image from "next/image";
 
 export default function RegisterPage() {
   return (
@@ -27,8 +27,8 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      <div className="hidden lg:block lg:w-1/2">
-        <ImagePlaceholder label="Register" className="h-full w-full rounded-none" />
+      <div className="hidden lg:block lg:w-1/2 relative">
+        <Image src="/images/apexplan-image.png" alt="" fill className="object-cover" />
       </div>
     </main>
   );

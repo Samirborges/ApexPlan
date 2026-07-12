@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { Calendar, ArrowRight } from "lucide-react";
-import { ImagePlaceholder } from "@/app/components/ui/ImagePlaceholder";
+import { Calendar, ArrowRight, Target } from "lucide-react";
 import { EditableField } from "@/app/components/ui/EditableField";
 import { GoalColumn } from "@/app/components/dashboard/GoalColumn";
 import { CreateGoalModal } from "@/app/components/dashboard/CreateGoalModal";
@@ -141,7 +140,9 @@ export default function ObjectiveDetailPage() {
   return (
     <div>
       <div className="flex items-center gap-3">
-        <ImagePlaceholder label="Icon" className="h-10 w-10 shrink-0 rounded-lg" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50">
+          <Target className="h-5 w-5 text-indigo-600" />
+        </div>
         <EditableField
           value={objective.title}
           onSave={(value) => handleSaveField("title", value)}

@@ -1,17 +1,18 @@
 import Link from "next/link";
-import { ImagePlaceholder } from "@/app/components/ui/ImagePlaceholder";
+import { LucideIcon } from "lucide-react";
 
 interface FeatureCardProps {
   title: string;
   subtitle: string;
   description: string;
+  icon: LucideIcon;
 }
 
-export function FeatureCard({ title, subtitle, description }: FeatureCardProps) {
+export function FeatureCard({ title, subtitle, description, icon: Icon }: FeatureCardProps) {
   return (
     <div className="rounded-xl border border-gray-200 p-6">
       <div className="flex items-center gap-3">
-        <ImagePlaceholder className="h-10 w-10 shrink-0 rounded-sm" />
+        <Icon className="h-5 w-5 text-indigo-600" />
         <div>
           <p className="font-semibold text-gray-900">{title}</p>
           <p className="text-sm text-gray-500">{subtitle}</p>

@@ -1,11 +1,11 @@
 import { features } from "@/app/constants/site";
 import { FeatureCard } from "@/app/components/landing/FeatureCard";
-import { ImagePlaceholder } from "@/app/components/ui/ImagePlaceholder";
+import Image from "next/image";
 
 export function Features() {
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
-      <h2 className="max-w-2xl text-3xl text-gray-900">
+      <h2 className="max-w-2xl text-3xl font-light text-gray-900">
         Achieve your goals clearly and directly with ApexPlan in simple steps.
       </h2>
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -14,7 +14,13 @@ export function Features() {
             <FeatureCard key={feature.title} {...feature} />
           ))}
         </div>
-        <ImagePlaceholder label="Features" className="min-h-[400px] w-full" />
+        <Image
+        src="/images/goals-screen.png"
+        alt="ApexPlan dashboard preview"
+        width={1000}
+        height={400}
+        className="mt-12 w-auto h-auto rounded-3xl"
+      />
       </div>
     </section>
   );

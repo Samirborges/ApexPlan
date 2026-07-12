@@ -4,19 +4,20 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
-import { Star, Calendar, Settings, Headphones, PanelLeft, ChevronRight } from "lucide-react";
+// import { Star, Calendar, Settings, Headphones, PanelLeft, ChevronRight } from "lucide-react";
+import { Calendar, User, PanelLeft, Target } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
-import { ImagePlaceholder } from "@/app/components/ui/ImagePlaceholder";
+
 
 const mainNav = [
-  { label: "Objetivos", href: "/home", icon: Star },
+  { label: "Objetivos", href: "/home", icon: Target },
   { label: "Calendário", href: "/calendar", icon: Calendar },
 ];
 
-const secondaryNav = [
-  { label: "Configurações", href: "/settings", icon: Settings },
-  { label: "Suporte", href: "/support", icon: Headphones },
-];
+// const secondaryNav = [
+//   { label: "Configurações", href: "/settings", icon: Settings },
+//   { label: "Suporte", href: "/support", icon: Headphones },
+// ];
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -32,17 +33,19 @@ export function Sidebar() {
     >
       <div className={clsx("flex items-center", isCollapsed ? "flex-col gap-3" : "justify-between")}>
         <div className={clsx("flex items-center gap-3", isCollapsed && "flex-col")}>
-          <ImagePlaceholder label="Avatar" className="h-12 w-12 shrink-0 rounded-full" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-200">
+            <User className="h-6 w-6 text-gray-400" />
+          </div>
           {!isCollapsed && (
             <div>
               <p className="font-semibold text-gray-900">{user?.username ?? "Username"}</p>
-              <Link
+              {/* <Link
                 href="/profile"
                 className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700"
               >
                 Editar Perfil
                 <ChevronRight className="h-3 w-3" />
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>
@@ -86,7 +89,7 @@ export function Sidebar() {
           })}
         </ul>
 
-        <ul className="mt-auto flex flex-col gap-1">
+        {/* <ul className="mt-auto flex flex-col gap-1">
           {secondaryNav.map((item) => (
             <li key={item.href}>
               <Link
@@ -102,7 +105,7 @@ export function Sidebar() {
               </Link>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </nav>
     </aside>
   );
