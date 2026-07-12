@@ -81,15 +81,13 @@ export default function ObjectiveDetailPage() {
   };
 
   const handleChangeObjectiveStatus  = async (status: Objective["status"]) => {
-    console.log("handleChangeObjectiveStatus chamado com:", status); 
+    
     if (!objective) return;
     try {
       const updated = await updateObjective(objective.id, { status });
-      console.log("resposta da API:", updated);
       setObjective(updated);
       toast.success("Status updated.");
-    } catch (error){
-      console.error("erro ao atualizar status:", error); 
+    } catch {
       toast.error("Could not update status.");
     }
   };
