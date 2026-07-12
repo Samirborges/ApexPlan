@@ -131,6 +131,7 @@ def test_update_goal():
         description="Nova descrição",
         estimated_days=20,
         extra_days=3,
+        status=Goal.Status.PENDING,
         is_completed=False,
     )
 
@@ -141,7 +142,7 @@ def test_update_goal():
     
 
 @pytest.mark.django_db
-def test_completed_goal_changes_status():
+def test_update_goal_status():
 
     goal = GoalFactory()
 
@@ -151,27 +152,30 @@ def test_completed_goal_changes_status():
         description=goal.description,
         estimated_days=goal.estimated_days,
         extra_days=goal.extra_days,
+        status=Goal.Status.PENDING,
+        is_completed=False,
+    )
+
+    assert updated.status == Goal.Status.PENDING
+    
+
+@pytest.mark.django_db
+def test_update_goal_completed():
+
+    goal = GoalFactory()
+
+    updated = GoalService.update(
+        goal=goal,
+        title=goal.title,
+        description=goal.description,
+        estimated_days=goal.estimated_days,
+        extra_days=goal.extra_days,
+        status=Goal.Status.COMPLETED,
         is_completed=True,
     )
 
     assert updated.status == Goal.Status.COMPLETED
-    
-
-@pytest.mark.django_db
-def test_goal_in_progress_status():
-
-    goal = GoalFactory()
-
-    updated = GoalService.update(
-        goal=goal,
-        title=goal.title,
-        description=goal.description,
-        estimated_days=goal.estimated_days,
-        extra_days=goal.extra_days,
-        is_completed=False,
-    )
-
-    assert updated.status == Goal.Status.IN_PROGRESS
+    assert updated.is_completed is True
 
 
 # -------------------------------------
