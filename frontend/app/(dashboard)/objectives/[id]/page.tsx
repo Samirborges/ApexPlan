@@ -14,6 +14,7 @@ import { formatDate } from "@/app/lib/utils/date";
 import type { Objective } from "@/app/types/objective";
 import type { Goal, GoalStatus } from "@/app/types/goal";
 import { ObjectiveStatusBadge } from "@/app/components/dashboard/ObjectiveStatusBadge";
+import { ConfirmDialog } from "@/app/components/ui/ConfirmDialog";
 
 const columns: { status: GoalStatus; label: string }[] = [
   { status: "IN_PROGRESS", label: "In Progress" },
@@ -32,6 +33,8 @@ export default function ObjectiveDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+
+  const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
 
   const loadData = async () => {
     const [objectiveData, goalsData] = await Promise.all([
@@ -131,16 +134,17 @@ export default function ObjectiveDetailPage() {
     }
   };
 
-  const handleDeleteGoal = async (goal: Goal) => {
+  const handleConfirmDeleteGoal = async () => {
+    if(!goalToDelete) return;
     try {
-      await deleteGoal(goal.id);
-      // Exclusão recalcula ordem e datas de todas as metas — refetch completo.
+      await deleteGoal(goalToDelete.id);
       await loadData();
       toast.success("Goal deleted.");
+      setGoalToDelete(null);
     } catch {
       toast.error("Could not delete goal.");
     }
-  };
+  }
 
   const handleGoalChanged = () => {
     // Criação/edição pode disparar recálculo de cronograma no backend,
@@ -210,7 +214,7 @@ export default function ObjectiveDetailPage() {
         onToggleComplete={handleToggleComplete}
         onChangeStatus={handleChangeStatus}
         onEdit={setEditingGoal}
-        onDelete={handleDeleteGoal}
+        onDelete={setGoalToDelete}
         />
     ))}
     </div>
@@ -221,6 +225,14 @@ export default function ObjectiveDetailPage() {
         objectiveTitle={objective.title}
         onClose={() => setIsCreateOpen(false)}
         onCreated={handleGoalChanged}
+      />
+
+      <ConfirmDialog
+        isOpen={!!goalToDelete}
+        title="Delete this goal?"
+        description={`This will permanently delete "${goalToDelete?.title}" and recalculate the schedule of the remaining goals.`}
+        onConfirm={handleConfirmDeleteGoal}
+        onClose={() => setGoalToDelete(null)}
       />
 
       {editingGoal && (
