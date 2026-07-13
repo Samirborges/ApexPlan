@@ -7,7 +7,7 @@ from typing import cast
 from rest_framework.permissions import IsAuthenticated
 
 from .models import User
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 
 class RegisterView(generics.CreateAPIView):
     
@@ -59,4 +59,63 @@ class MeView(APIView):
         
         return Response(serializer.data)
     
-    
+
+class PasswordResetRequestView(generics.GenericAPIView):
+
+    serializer_class = PasswordResetRequestSerializer
+
+    permission_classes = []
+
+    authentication_classes = []
+
+    def post(self, request):
+
+        serializer = self.get_serializer(
+            data=request.data
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        serializer.save()
+
+        return Response(
+            {
+                "detail": (
+                    "If an account with this email exists, "
+                    "a password reset link has been sent."
+                )
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+
+    serializer_class = PasswordResetConfirmSerializer
+
+    permission_classes = []
+
+    authentication_classes = []
+
+    def post(self, request):
+
+        serializer = self.get_serializer(
+            data=request.data
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        serializer.save()
+
+        return Response(
+            {
+                "detail": "Password reset successfully."
+            },
+            status=status.HTTP_200_OK,
+        )
+
+  

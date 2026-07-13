@@ -99,6 +99,21 @@ DATABASES = {
     }
 }
 
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL",
+    default="noreply@apexplan.com",
+)
+
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    default="http://localhost:3000",
+)
+
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend",
+)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
