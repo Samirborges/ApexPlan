@@ -7,6 +7,7 @@ import { ObjectivesTable } from "@/app/components/dashboard/ObjectivesTable";
 import { fetchObjectives, deleteObjective } from "@/app/services/objectives.service";
 import type { Objective, ObjectiveStatus } from "@/app/types/objective";
 import { CreateObjectiveModal } from "@/app/components/dashboard/CreateObjectiveModal";
+import { ConfirmDialog } from "@/app/components/ui/ConfirmDialog";
 
 const statusTabs = [
   { label: "A fazer", value: "ACTIVE" },
@@ -19,6 +20,7 @@ export default function HomePage() {
   const [allObjectives, setAllObjectives] = useState<Objective[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [objectiveToDelete, setObjectiveToDelete] = useState<Objective | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -41,11 +43,13 @@ export default function HomePage() {
 
   const visibleObjectives = allObjectives.filter((o) => o.status === activeStatus);
 
-  const handleDelete = async (id: number) => {
+  const handleConfirmDelete = async () => {
+    if (!objectiveToDelete) return;
     try {
-      await deleteObjective(id);
-      setAllObjectives((prev) => prev.filter((o) => o.id !== id));
+      await deleteObjective(objectiveToDelete.id);
+      setAllObjectives((prev) => prev.filter((o) => o.id !== objectiveToDelete.id));
       toast.success("Objective deleted.");
+      setObjectiveToDelete(null);
     } catch {
       toast.error("Could not delete objective.");
     }
@@ -76,7 +80,7 @@ export default function HomePage() {
         ) : visibleObjectives.length > 0 ? (
           <ObjectivesTable
             objectives={visibleObjectives}
-            onDelete={handleDelete}
+            onDelete={(id) => setObjectiveToDelete(allObjectives.find(o => o.id === id) ?? null)}
           />
         ) : (
           <div className="rounded-xl border border-dashed border-gray-200 py-16 text-center text-sm text-gray-400">
@@ -90,6 +94,14 @@ export default function HomePage() {
         onClose={() => setIsModalOpen(false)}
         onCreated={(objective) => setAllObjectives((prev) => [...prev, objective])}
         />
+
+      <ConfirmDialog 
+        isOpen={!!objectiveToDelete}
+        title="Delete this objective?"
+        description={`This will permanently delete "${objectiveToDelete?.title}" and all its goals. This action cannot be undone.`}
+        onConfirm={handleConfirmDelete}
+        onClose={() => setObjectiveToDelete(null)}
+      />
     </div>
   );
 }
