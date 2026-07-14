@@ -1,11 +1,12 @@
 import pytest
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.core import mail
 from rest_framework import status
 from rest_framework.test import APIClient
 from .factories import UserFactory
 
-
+from users.tokens import PasswordResetService
 from users.models import User
 
 
@@ -186,3 +187,100 @@ def test_me_without_authentication():
     response = client.get("/api/auth/me/")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+@pytest.mark.django_db
+def test_password_reset_request_existing_email():
+
+    user = UserFactory(
+        email="alessandro@email.com"
+    )
+
+    client = APIClient()
+
+    response = client.post(
+        "/api/auth/password-reset/",
+        {
+            "email": user.email,
+        },
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+
+    assert len(mail.outbox) == 1
+
+    email = mail.outbox[0]
+
+    assert user.email in email.to
+
+    assert "Recuperação de senha" in email.subject
+
+
+@pytest.mark.django_db
+def test_password_reset_request_non_existing_email():
+
+    client = APIClient()
+
+    response = client.post(
+        "/api/auth/password-reset/",
+        {
+            "email": "naoexiste@email.com",
+        },
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+
+    assert len(mail.outbox) == 0
+
+
+@pytest.mark.django_db
+def test_password_reset_confirm_success():
+
+    user = UserFactory()
+    
+    uid, token = PasswordResetService.generate(user)
+
+    client = APIClient()
+
+    response = client.post(
+        "/api/auth/password-reset/confirm/",
+        {
+            "uid": uid,
+            "token": token,
+            "password": "NovaSenha123",
+        },
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+
+    user.refresh_from_db()
+
+    assert user.check_password("NovaSenha123")
+
+
+@pytest.mark.django_db
+def test_password_reset_confirm_invalid_token():
+
+    user = UserFactory()
+
+    uid, _ = PasswordResetService.generate(user)
+
+    client = APIClient()
+
+    response = client.post(
+        "/api/auth/password-reset/confirm/",
+        {
+            "uid": uid,
+            "token": "token-invalido",
+            "password": "NovaSenha123",
+        },
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    
+
+

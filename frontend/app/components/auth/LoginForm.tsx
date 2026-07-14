@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/app/lib/validations/auth";
 import { useAuth } from "@/app/context/AuthContext";
 import { Input } from "@/app/components/ui/Input";
+import Link from "next/link";
 
 export function LoginForm() {
   const router = useRouter();
@@ -75,6 +76,12 @@ export function LoginForm() {
         >
           {isSubmitting ? "Signing in..." : "Login"}
         </button>
+
+        <div className="flex justify-end">
+          <Link href="/forgot-password" className="text-xs font-medium text-indigo-600 hover:underline">
+            Forgot password?
+          </Link>
+        </div>
       </form>
     </div>
   );
