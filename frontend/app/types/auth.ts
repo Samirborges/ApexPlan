@@ -15,3 +15,13 @@ export interface RegisterPayload {
   password: string;
   confirmPassword: string;
 }
+
+export interface RequestPasswordResetPayload {
+  email: string;
+}
+
+export interface ConfirmPasswordResetPayload {
+  uid: string;
+  token: string;
+  password: string;
+}
